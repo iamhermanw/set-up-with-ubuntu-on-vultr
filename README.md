@@ -75,40 +75,40 @@
 > [!NOTE]
 > Credit to Alex Garnett for his tutorial titled [*How To Use Certbot Standalone Mode to Retrieve Let's Encrypt SSL Certificates on Ubuntu 22.04*](https://www.digitalocean.com/community/tutorials/how-to-use-certbot-standalone-mode-to-retrieve-let-s-encrypt-ssl-certificates-on-ubuntu-22-04).
 
-19. Set DNS pointing to the server.
+18. Set DNS pointing to the server.
 
-20. Install snap:
+19. Install snap:
 
 `sudo snap install core; sudo snap refresh core`
 
-21. Install Certbot:
+20. Install Certbot:
 
 `sudo snap install --classic certbot`
 
-22. Link the `certbot` command from the snap install directory to your path:
+21. Link the `certbot` command from the snap install directory to your path:
 
 `sudo ln -s /snap/bin/certbot /usr/bin/certbot`
 
-23. Open up ports `80` (HTTP) and `443` (HTTPS):
+22. Open up ports `80` (HTTP) and `443` (HTTPS):
 
 `sudo ufw allow 80`
 
 `sudo ufw allow 443`
 
-24. Get the certificate:
+23. Get the certificate:
 
 `sudo certbot certonly --standalone -d yourdomain.com`
 
-25. Handle automatic renewals by adding a `renew_hook`:
+24. Handle automatic renewals by adding a `renew_hook`:
 
 `sudo nano /etc/letsencrypt/renewal/yourdomain.com.conf`
 
-26. Add a hook on the last line:
+25. Add a hook on the last line:
 
 ```
 renew_hook = systemctl reload your_service
 ```
 
-27. Run a dry run:
+26. Run a dry run:
 
 `sudo certbot renew --dry-run`
