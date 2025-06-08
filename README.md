@@ -3,7 +3,7 @@
 ## Generate a SSH key
 
 > [!NOTE]
-> Credit to Ben McDonald for his tutorial titled Creating ED25519 SSH keys.
+> Credit to Ben McDonald for his tutorial titled [*Creating ED25519 SSH keys*](https://www.mebmc.uk/posts/creating_ed25519_ssh_keys).
 
 1. Create a new SSH key in the local terminal:
 
@@ -22,7 +22,7 @@
 ## Create a sudo non-root user
 
 > [!NOTE]
-> Credit to Jamon Camisso and Anish Singh Walia for their tutorial titled Initial Server Setup with Ubuntu.
+> Credit to Jamon Camisso and Anish Singh Walia for their tutorial titled [*Initial Server Setup with Ubuntu*](https://www.digitalocean.com/community/tutorials/initial-server-setup-with-ubuntu).
 
 6. Log in as the root user:
 
@@ -40,7 +40,7 @@
 
 `usermod -aG sudo herman`
 
-## Configure the Firewall
+## Configure the firewall
 
 11. Examine UFW profiles:
 
@@ -58,23 +58,57 @@
 
 `ufw status`
 
-## Log in as the sudo non-root user
+## Log in as a sudo non-root user
 
 15. Configure SSH access for the new non-root user:
 
 `rsync --archive --chown=herman:herman ~/.ssh /home/herman`
 
-16. Log in:
+16. Exit from the root user's terminal and log in as the new user:
 
 `ssh herman@Server_IP_Address`
 
-17. Rnter the passphrase.
+17. Enter the passphrase.
 
-# Install Certbot
+# Get Let's Encrypt SSL certificates
 
 > [!NOTE]
-> Credit to Alex Garnett for his tutorial titled How To Use Certbot Standalone Mode to Retrieve Let's Encrypt SSL Certificates on Ubuntu 22.04.
+> Credit to Alex Garnett for his tutorial titled [*How To Use Certbot Standalone Mode to Retrieve Let's Encrypt SSL Certificates on Ubuntu 22.04*](https://www.digitalocean.com/community/tutorials/how-to-use-certbot-standalone-mode-to-retrieve-let-s-encrypt-ssl-certificates-on-ubuntu-22-04).
 
 19. Set DNS pointing to the server.
 
+20. Install snap:
 
+`sudo snap install core; sudo snap refresh core`
+
+21. Install Certbot:
+
+`sudo snap install --classic certbot`
+
+22. Link the `certbot` command from the snap install directory to your path:
+
+`sudo ln -s /snap/bin/certbot /usr/bin/certbot`
+
+23. Open up ports `80` (HTTP) and `443` (HTTPS):
+
+`sudo ufw allow 80`
+
+`sudo ufw allow 443`
+
+24. Get the certificate:
+
+`sudo certbot certonly --standalone -d yourdomain.com`
+
+25. Handle automatic renewals by adding a `renew_hook`:
+
+`sudo nano /etc/letsencrypt/renewal/yourdomain.com.conf`
+
+26. Add a hook on the last line:
+
+```
+renew_hook = systemctl reload your_service
+```
+
+27. Run a dry run:
+
+`sudo certbot renew --dry-run`
